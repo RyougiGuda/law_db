@@ -1,0 +1,4 @@
+my-project/frontend/node_modules/
+my-project/frontend/build/
+my-project/backend/node_modules/
+.idea/
