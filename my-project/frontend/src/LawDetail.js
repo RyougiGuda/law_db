@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-
+import { API_URL } from "./config";  // 新增
 export default function LawDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -10,7 +10,7 @@ export default function LawDetail() {
   const [applications, setApplications] = useState([]);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/laws/${id}`)
+    fetch(`${API_URL}/laws/${id}`)
       .then(res => res.json())
       .then(data => {
         setLawDetail(data.law);

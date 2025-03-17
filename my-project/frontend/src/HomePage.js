@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-
+import { API_URL } from "./config";  // 新增
 export default function HomePage() {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
@@ -18,7 +18,7 @@ export default function HomePage() {
   ];
 
   useEffect(() => {
-    fetch("http://localhost:5000/history")
+    fetch(`${API_URL}/history`)
       .then((res) => res.json())
       .then((data) => setRecentHistory(data))
       .catch(console.error);
@@ -27,7 +27,7 @@ export default function HomePage() {
   const handleSearch = (e) => {
     e.preventDefault();
     if (!searchQuery.trim()) return;
-    const url = `http://localhost:5000/search?q=${encodeURIComponent(
+    const url = `${API_URL}/search?q=${encodeURIComponent(
       searchQuery
     )}&filterType=${encodeURIComponent(
       advancedFilterType
@@ -43,7 +43,7 @@ export default function HomePage() {
           applications: Array.isArray(data.applications) ? data.applications : [],
         });
         // 更新搜索历史
-        fetch("http://localhost:5000/history")
+        fetch(`${API_URL}/history`)
           .then((res) => res.json())
           .then((historyData) => setRecentHistory(historyData))
           .catch(console.error);

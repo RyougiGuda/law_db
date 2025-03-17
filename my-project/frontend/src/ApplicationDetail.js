@@ -2,14 +2,14 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-
+import { API_URL } from "./config";  // 新增
 export default function ApplicationDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [application, setApplication] = useState(null);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/applications/${id}`)
+    fetch(`${API_URL}/applications/${id}`)
       .then(res => res.json())
       .then(data => setApplication(data))
       .catch(console.error);

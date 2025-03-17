@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-
+import { API_URL } from "./config";  // 新增
 export default function CategoryPage() {
   const { name } = useParams(); // 从 URL 中获取分类名称（中文，比如“商务”、“刑法”等）
   const navigate = useNavigate();
@@ -11,7 +11,7 @@ export default function CategoryPage() {
 
   const fetchData = useCallback(() => {
     setLoading(true);
-    const url = `http://localhost:5000/category?name=${encodeURIComponent(
+    const url = `${API_URL}/category?name=${encodeURIComponent(
       name
     )}&country=${encodeURIComponent(countryFilter)}`;
     fetch(url)

@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/static/css/main.21446506.css",
-    "main.js": "/static/js/main.4d2a47c7.js",
-    "static/js/488.25c9d48c.chunk.js": "/static/js/488.25c9d48c.chunk.js",
-    "index.html": "/index.html",
-    "main.21446506.css.map": "/static/css/main.21446506.css.map",
-    "main.4d2a47c7.js.map": "/static/js/main.4d2a47c7.js.map",
-    "488.25c9d48c.chunk.js.map": "/static/js/488.25c9d48c.chunk.js.map"
+    "main.css": "/law_db_io/static/css/main.21446506.css",
+    "main.js": "/law_db_io/static/js/main.4fbb4dd4.js",
+    "static/js/488.25c9d48c.chunk.js": "/law_db_io/static/js/488.25c9d48c.chunk.js",
+    "index.html": "/law_db_io/index.html",
+    "main.21446506.css.map": "/law_db_io/static/css/main.21446506.css.map",
+    "main.4fbb4dd4.js.map": "/law_db_io/static/js/main.4fbb4dd4.js.map",
+    "488.25c9d48c.chunk.js.map": "/law_db_io/static/js/488.25c9d48c.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.21446506.css",
-    "static/js/main.4d2a47c7.js"
+    "static/js/main.4fbb4dd4.js"
   ]
 }

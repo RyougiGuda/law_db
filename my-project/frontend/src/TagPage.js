@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-
+import { API_URL } from "./config";  // 新增
 export default function TagPage() {
   const { tag } = useParams();
   const navigate = useNavigate();
@@ -11,7 +11,7 @@ export default function TagPage() {
 
   const fetchData = useCallback(() => {
     setLoading(true);
-    const url = `http://localhost:5000/search?q=&filterType=all&country=all&tag=${encodeURIComponent(tag)}`;
+    const url = `${API_URL}/search?q=&filterType=all&country=all&tag=${encodeURIComponent(tag)}`;
     fetch(url)
       .then((res) => res.json())
       .then((resData) => {
