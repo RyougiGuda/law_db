@@ -5,25 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c0532109-976c-48fd-b605-79a33a5fad77" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/my-project/frontend/src/App.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/my-project/frontend/src/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/my-project/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/my-project/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/my-project/package-lock.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/my-project/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/my-project/frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/my-project/public/favicon.ico" beforeDir="false" afterPath="$PROJECT_DIR$/my-project/frontend/public/favicon.ico" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/my-project/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/my-project/frontend/public/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/my-project/public/logo192.png" beforeDir="false" afterPath="$PROJECT_DIR$/my-project/frontend/public/logo192.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/my-project/public/logo512.png" beforeDir="false" afterPath="$PROJECT_DIR$/my-project/frontend/public/logo512.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/my-project/public/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/my-project/frontend/public/manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/my-project/public/robots.txt" beforeDir="false" afterPath="$PROJECT_DIR$/my-project/frontend/public/robots.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/my-project/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/my-project/frontend/src/App.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/my-project/src/App.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/my-project/src/App.test.js" beforeDir="false" afterPath="$PROJECT_DIR$/my-project/frontend/src/App.test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/my-project/src/index.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/my-project/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/my-project/frontend/src/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/my-project/src/logo.svg" beforeDir="false" afterPath="$PROJECT_DIR$/my-project/frontend/src/logo.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/my-project/src/reportWebVitals.js" beforeDir="false" afterPath="$PROJECT_DIR$/my-project/frontend/src/reportWebVitals.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/my-project/src/setupTests.js" beforeDir="false" afterPath="$PROJECT_DIR$/my-project/frontend/src/setupTests.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,7 +14,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/my-project" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 0
@@ -45,7 +28,7 @@
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "main",
     "last_opened_file_path": "E:/pythonProjects/pythonProject/pythonProject"
   }
 }]]></component>
