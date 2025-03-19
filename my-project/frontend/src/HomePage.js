@@ -13,8 +13,7 @@ export default function HomePage() {
   const [recentHistory, setRecentHistory] = useState([]);
 
   const allCountries = ["巴西", "阿根廷", "墨西哥", "智利", "哥伦比亚", "乌拉圭",  "巴哈马"];
-  const allCategories = ["公法／政务／行政", "民法及相关", "刑法及相关", "宪法", "税法", "知识产权", "海关法"];
-
+  const allCategories = ["公法／政务／行政", "民法及相关", "刑法及相关", "宪法", "税法", "金融法", "商法","交通法"];
   useEffect(() => {
     fetch(`${API_URL}/history`)
       .then((res) => res.json())
