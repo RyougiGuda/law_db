@@ -1,4 +1,3 @@
-// backend/server.js
 const express = require("express");
 const cors = require("cors");
 const db = require("./db");
@@ -6,7 +5,7 @@ const db = require("./db");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+app.use(cors()); // 可根据需要设置允许的 origin
 app.use(express.json());
 
 // 辅助函数：记录搜索历史
@@ -20,86 +19,49 @@ const recordSearch = (query) => {
 
 app.get("/search", (req, res) => {
   const query = req.query.q || "";
-  const filterType = req.query.filterType || "all";
+  const filterType = req.query.filterType || "all"; // "all", "law", "case", "journal", "document"
   const country = req.query.country || "all";
-  const tag = req.query.tag || "all";
   recordSearch(query);
   const likeQuery = `%${query}%`;
-  const countryFilter = country.toLowerCase() !== "all" ? country : null;
-  const tagFilter = tag.toLowerCase() !== "all" ? tag : null;
+  const countryFilter = (country.toLowerCase() !== "all") ? country : null;
 
   if (filterType === "law") {
-    let sql = `
-      SELECT DISTINCT l.* FROM laws l
-      LEFT JOIN law_tags lt ON l.id = lt.law_id
-      LEFT JOIN tags t ON lt.tag_id = t.id
-      WHERE (l.title LIKE ? OR l.content LIKE ?)
-    `;
+    let sql = "SELECT * FROM laws WHERE (title LIKE ? OR content LIKE ?)";
     let params = [likeQuery, likeQuery];
     if (countryFilter) {
-      sql += " AND l.country = ?";
+      sql += " AND country = ?";
       params.push(countryFilter);
-    }
-    if (tagFilter) {
-      sql += " AND t.name = ?";
-      params.push(tagFilter);
     }
     db.all(sql, params, (err, lawRows) => {
       if (err) return res.status(500).json({ error: err.message });
       res.json({ laws: lawRows, applications: [] });
     });
   } else if (filterType === "case" || filterType === "journal" || filterType === "document") {
-    let sql = `
-      SELECT DISTINCT a.* FROM law_applications a
-      LEFT JOIN application_tags at ON a.id = at.application_id
-      LEFT JOIN tags t ON at.tag_id = t.id
-      WHERE (a.title LIKE ? OR a.full_content LIKE ?)
-      AND a.sub_type = ?
-    `;
-    let params = [likeQuery, likeQuery, filterType];
+    let sql = "SELECT * FROM law_applications WHERE (title LIKE ? OR full_content LIKE ?)";
+    let params = [likeQuery, likeQuery];
+    sql += " AND sub_type = ?";
+    params.push(filterType);
     if (countryFilter) {
-      sql += " AND a.country = ?";
+      sql += " AND country = ?";
       params.push(countryFilter);
-    }
-    if (tagFilter) {
-      sql += " AND t.name = ?";
-      params.push(tagFilter);
     }
     db.all(sql, params, (err, appRows) => {
       if (err) return res.status(500).json({ error: err.message });
       res.json({ laws: [], applications: appRows });
     });
   } else {
-    // filterType === "all"
-    let lawSql = `
-      SELECT DISTINCT l.* FROM laws l
-      LEFT JOIN law_tags lt ON l.id = lt.law_id
-      LEFT JOIN tags t ON lt.tag_id = t.id
-      WHERE (l.title LIKE ? OR l.content LIKE ?)
-    `;
+    // filterType === "all": 同时搜索法律条目和应用案例
+    let lawSql = "SELECT * FROM laws WHERE (title LIKE ? OR content LIKE ?)";
     let lawParams = [likeQuery, likeQuery];
     if (countryFilter) {
-      lawSql += " AND l.country = ?";
+      lawSql += " AND country = ?";
       lawParams.push(countryFilter);
     }
-    if (tagFilter) {
-      lawSql += " AND t.name = ?";
-      lawParams.push(tagFilter);
-    }
-    let appSql = `
-      SELECT DISTINCT a.* FROM law_applications a
-      LEFT JOIN application_tags at ON a.id = at.application_id
-      LEFT JOIN tags t ON at.tag_id = t.id
-      WHERE (a.title LIKE ? OR a.full_content LIKE ?)
-    `;
+    let appSql = "SELECT * FROM law_applications WHERE (title LIKE ? OR full_content LIKE ?)";
     let appParams = [likeQuery, likeQuery];
     if (countryFilter) {
-      appSql += " AND a.country = ?";
+      appSql += " AND country = ?";
       appParams.push(countryFilter);
-    }
-    if (tagFilter) {
-      appSql += " AND t.name = ?";
-      appParams.push(tagFilter);
     }
     db.all(lawSql, lawParams, (err, lawRows) => {
       if (err) return res.status(500).json({ error: err.message });
@@ -110,14 +72,14 @@ app.get("/search", (req, res) => {
     });
   }
 });
-// 分类搜索接口：根据分类名称查询（支持国家过滤）
-// 这里使用子查询方式获取每条数据所有关联的分类（用 GROUP_CONCAT 拼接）
+
+// 分类搜索接口：按分类名称查询（支持国家过滤），返回每条记录所有分类
 app.get("/category", (req, res) => {
   const cat = req.query.name || "";
   const country = req.query.country || "all";
   const countryFilter = (country.toLowerCase() !== "all") ? country : null;
 
-  // 查询法律条目：先找出属于该分类的法律，然后用子查询返回所有关联分类
+  // 查询法律条目
   let lawSql = `
     SELECT l.*, (
       SELECT GROUP_CONCAT(c.name, ',')
@@ -138,7 +100,7 @@ app.get("/category", (req, res) => {
     lawParams.push(countryFilter);
   }
 
-  // 查询应用案例：同理
+  // 查询应用案例
   let appSql = `
     SELECT a.*, (
       SELECT GROUP_CONCAT(c.name, ',')
@@ -168,7 +130,7 @@ app.get("/category", (req, res) => {
   });
 });
 
-// 获取某个法律条目的详情，并返回该法律的所有关联分类
+// 获取某个法律条目的详情，返回分类信息
 app.get("/laws/:id", (req, res) => {
   const lawId = req.params.id;
   const lawSql = `
@@ -202,7 +164,7 @@ app.get("/laws/:id", (req, res) => {
   });
 });
 
-// 获取某个应用案例的完整详情，并返回该案例的所有关联分类
+// 获取某个应用案例的详情，返回分类信息
 app.get("/applications/:id", (req, res) => {
   const appId = req.params.id;
   const appSql = `
@@ -222,8 +184,7 @@ app.get("/applications/:id", (req, res) => {
   });
 });
 
-
-// 获取最近搜索历史（最新5条）
+// 获取最近搜索历史
 app.get("/history", (req, res) => {
   db.all("SELECT query, created_at FROM search_history ORDER BY created_at DESC LIMIT 5", [], (err, rows) => {
     if (err) return res.status(500).json({ error: err.message });

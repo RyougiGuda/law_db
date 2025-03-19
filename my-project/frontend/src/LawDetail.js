@@ -2,7 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { API_URL } from "./config";  // 新增
+import { API_URL } from "./config";
+
 export default function LawDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -37,8 +38,7 @@ export default function LawDetail() {
         <p className="text-gray-700">{lawDetail.content}</p>
         <p className="mt-2 text-sm text-gray-400">
           国家：{lawDetail.country}
-          {lawDetail.tags && ` | 标签：${lawDetail.tags}`}
-          {lawDetail.categories && ` | 分类：${lawDetail.categories}`}
+          {lawDetail.law_category && ` | 分类：${lawDetail.law_category}`}
         </p>
       </div>
       <h2 className="text-2xl font-bold text-gray-800 mb-4">引用该法律的应用案例</h2>

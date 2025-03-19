@@ -2,20 +2,18 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { API_URL } from "./config";  // 新增
+import { API_URL } from "./config";
+
 export default function HomePage() {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
-  const [advancedFilterType, setAdvancedFilterType] = useState("all"); // 全部、法律、案例、期刊、文书
-  const [advancedCountry, setAdvancedCountry] = useState("all"); // 全部国家、巴西、阿根廷、智利、墨西哥等
-  const [advancedTag, setAdvancedTag] = useState("all"); // 全部标签或选定标签
+  const [advancedFilterType, setAdvancedFilterType] = useState("all");
+  const [advancedCountry, setAdvancedCountry] = useState("all");
   const [searchResults, setSearchResults] = useState({ laws: [], applications: [] });
   const [recentHistory, setRecentHistory] = useState([]);
-  const allTags = [
-    "环境保护", "反腐败", "人权", "劳动法", "税法", "知识产权", "宪法", "国际贸易", "刑事诉讼",
-    "民事诉讼", "污染", "透明度", "工人权利", "森林砍伐", "土著权利", "合规", "专利", "版权",
 
-  ];
+  const allCountries = ["巴西", "阿根廷", "墨西哥", "智利", "哥伦比亚", "乌拉圭",  "巴哈马"];
+  const allCategories = ["公法／政务／行政", "民法及相关", "刑法及相关", "宪法", "税法", "知识产权", "海关法"];
 
   useEffect(() => {
     fetch(`${API_URL}/history`)
@@ -27,22 +25,14 @@ export default function HomePage() {
   const handleSearch = (e) => {
     e.preventDefault();
     if (!searchQuery.trim()) return;
-    const url = `${API_URL}/search?q=${encodeURIComponent(
-      searchQuery
-    )}&filterType=${encodeURIComponent(
-      advancedFilterType
-    )}&country=${encodeURIComponent(advancedCountry)}&tag=${encodeURIComponent(
-      advancedTag
-    )}`;
+    const url = `${API_URL}/search?q=${encodeURIComponent(searchQuery)}&filterType=${encodeURIComponent(advancedFilterType)}&country=${encodeURIComponent(advancedCountry)}`;
     fetch(url)
       .then((res) => res.json())
       .then((data) => {
-        // 防御性设置：保证返回的 laws 与 applications 为数组
         setSearchResults({
           laws: Array.isArray(data.laws) ? data.laws : [],
           applications: Array.isArray(data.applications) ? data.applications : [],
         });
-        // 更新搜索历史
         fetch(`${API_URL}/history`)
           .then((res) => res.json())
           .then((historyData) => setRecentHistory(historyData))
@@ -51,45 +41,36 @@ export default function HomePage() {
       .catch(console.error);
   };
 
-  const handleCategoryClick = (cat) => {
-    navigate(`/category/${encodeURIComponent(cat)}`);
-  };
-
-  const handleTagClick = (tag) => {
-    navigate(`/tag/${encodeURIComponent(tag)}`);
-  };
-
-  const handleLawClick = (id) => {
-    navigate(`/laws/${id}`);
-  };
-
-  const handleApplicationClick = (id) => {
-    navigate(`/applications/${id}`);
-  };
+  const handleCountryClick = (country) => navigate(`/country/${encodeURIComponent(country)}`);
+  const handleCategoryClick = (cat) => navigate(`/category/${encodeURIComponent(cat)}`);
+  const handleLawClick = (id) => navigate(`/laws/${id}`);
+  const handleApplicationClick = (id) => navigate(`/applications/${id}`);
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
-      {/* 顶部导航 */}
-      <nav className="bg-[#005B8E] text-white">
-        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <span className="text-xl font-bold">拉美国家法律数据库</span>
-          </div>
-          <form
-            onSubmit={handleSearch}
-            className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2"
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 via-white to-gray-100 font-sans">
+      {/* Top Navigation */}
+      <nav className="bg-gradient-to-r from-indigo-700 via-indigo-600 to-indigo-800 text-white shadow-xl sticky top-0 z-50">
+        <div className="container mx-auto px-6 py-4 flex items-center justify-between">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+            className="flex items-center space-x-3"
           >
+            <span className="text-2xl font-extrabold tracking-tight">拉美国家法律数据库</span>
+          </motion.div>
+          <form onSubmit={handleSearch} className="flex items-center space-x-4">
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="搜索法律条文..."
-              className="w-full sm:w-72 px-3 py-2 rounded-md focus:outline-none text-gray-700"
+              className="w-80 px-4 py-2 rounded-full bg-white/90 text-gray-800 shadow-inner focus:outline-none focus:ring-2 focus:ring-indigo-300 transition-all"
             />
             <select
               value={advancedFilterType}
               onChange={(e) => setAdvancedFilterType(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none text-gray-800"
+              className="px-4 py-2 rounded-full bg-white/90 text-gray-800 shadow-inner focus:outline-none focus:ring-2 focus:ring-indigo-300"
             >
               <option value="all">全部</option>
               <option value="law">法律</option>
@@ -100,138 +81,141 @@ export default function HomePage() {
             <select
               value={advancedCountry}
               onChange={(e) => setAdvancedCountry(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none text-gray-800"
+              className="px-4 py-2 rounded-full bg-white/90 text-gray-800 shadow-inner focus:outline-none focus:ring-2 focus:ring-indigo-300"
             >
               <option value="all">全部国家</option>
-              <option value="巴西">巴西</option>
-              <option value="阿根廷">阿根廷</option>
-              <option value="智利">智利</option>
-              <option value="墨西哥">墨西哥</option>
-              {/* 根据需要添加更多国家 */}
-            </select>
-            <select
-              value={advancedTag}
-              onChange={(e) => setAdvancedTag(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none text-gray-800"
-            >
-              <option value="all">全部标签</option>
-              {allTags.map((t, idx) => (
-                <option key={idx} value={t}>
-                  {t}
-                </option>
+              {allCountries.map((c, idx) => (
+                <option key={idx} value={c}>{c}</option>
               ))}
             </select>
             <button
               type="submit"
-              className="px-4 py-2 bg-[#FF7300] hover:bg-orange-600 rounded-md font-semibold"
+              className="px-6 py-2 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 rounded-full font-semibold text-white shadow-lg transition-all duration-300"
             >
               搜索
             </button>
           </form>
-          <div className="flex items-center space-x-4 text-sm">
-            <span className="hover:text-gray-200">历史记录</span>
-            <span className="hover:text-gray-200">文件夹</span>
+          <div className="flex items-center space-x-6 text-sm">
+            <span className="cursor-pointer hover:text-indigo-200 transition-colors">历史记录</span>
+            <span className="cursor-pointer hover:text-indigo-200 transition-colors">文件夹</span>
           </div>
         </div>
       </nav>
 
-      <div className="container mx-auto px-4 py-6 flex flex-col md:flex-row md:space-x-8">
-        {/* 左侧内容 */}
-        <div className="w-full md:w-2/3 mb-6 md:mb-0">
+      {/* Main Content */}
+      <div className="container mx-auto px-6 py-10 flex flex-col md:flex-row md:space-x-10">
+        {/* Left Section */}
+        <div className="w-full md:w-2/3">
           <motion.h2
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-3xl font-bold text-gray-700 mb-4"
+            className="text-4xl font-extrabold text-gray-800 mb-8 tracking-tight"
           >
-            拉美国家法律数据库 首页
+            拉美国家法律数据库
           </motion.h2>
-          <h4 className="text-xl font-bold text-gray-700 mb-4">领域 &amp; 资源</h4>
+
+          {/* Countries Section */}
+          <h4 className="text-xl font-semibold text-gray-700 mb-4">所有国家</h4>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-            {["商务", "刑法", "民法", "知识产权", "环境", "资本市场", "重整与破产"].map((cat, idx) => (
-              <button
+            {allCountries.map((country, idx) => (
+              <motion.button
                 key={idx}
-                onClick={() => handleCategoryClick(cat)}
-                className="text-blue-600 hover:underline text-left"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => handleCountryClick(country)}
+                className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg shadow-md px-4 py-3 font-medium transition-all duration-200"
               >
-                {cat}
-              </button>
+                {country}
+              </motion.button>
             ))}
           </div>
 
-          {/* “所有标签”区域 */}
-          <div className="mt-8">
-            <h4 className="text-xl font-bold text-gray-700 mb-4">所有标签</h4>
-            <div className="grid grid-cols-3 gap-3">
-              {allTags.map((tag, idx) => (
-                <button
+          {/* Categories Section */}
+          <div className="mt-10">
+            <h4 className="text-xl font-semibold text-gray-700 mb-4">所有分类</h4>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+              {allCategories.map((cat, idx) => (
+                <motion.button
                   key={idx}
-                  onClick={() => handleTagClick(tag)}
-                  className="bg-white border border-gray-300 rounded-md px-3 py-2 text-gray-800 hover:bg-gray-100"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => handleCategoryClick(cat)}
+                  className="bg-teal-600 hover:bg-teal-700 text-white rounded-lg shadow-md px-4 py-3 font-medium transition-all duration-200"
                 >
-                  {tag}
-                </button>
+                  {cat}
+                </motion.button>
               ))}
             </div>
           </div>
 
-          {/* 搜索结果展示 */}
+          {/* Search Results */}
           {(searchResults.laws?.length > 0 || searchResults.applications?.length > 0) && (
-            <div className="mt-6">
-              <h3 className="text-lg font-semibold text-gray-700 mb-2">
-                搜索结果：{searchQuery}
-              </h3>
-              { (searchResults.laws || []).map((law) => (
-                <div
+            <div className="mt-12">
+              <h3 className="text-2xl font-semibold text-gray-800 mb-6">搜索结果：{searchQuery}</h3>
+              {(searchResults.laws || []).map((law) => (
+                <motion.div
                   key={law.id}
-                  className="bg-white p-4 rounded-xl shadow-md mb-4 cursor-pointer"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
                   onClick={() => handleLawClick(law.id)}
+                  className="bg-white p-6 rounded-xl shadow-lg mb-6 cursor-pointer hover:shadow-2xl transition-all duration-300 border border-gray-100"
                 >
-                  <h2 className="text-2xl font-bold text-gray-800">{law.title}</h2>
-                  <p className="text-gray-600 mt-2">{law.content.substring(0, 100)}...</p>
-                  <p className="text-sm text-gray-400 mt-1">
-                    国家：{law.country} {law.tags && `| 标签：${law.tags}`} {law.categories && `| 分类：${law.categories}`}
+                  <h2 className="text-xl font-bold text-gray-800">{law.title}</h2>
+                  <p className="text-gray-600 mt-2 line-clamp-2">{law.content}</p>
+                  <p className="text-sm text-gray-500 mt-1">
+                    国家：{law.country} {law.law_category && `| 分类：${law.law_category}`}
                   </p>
-                </div>
+                </motion.div>
               ))}
-              { (searchResults.applications || []).map((appItem) => (
-                <div
+              {(searchResults.applications || []).map((appItem) => (
+                <motion.div
                   key={appItem.id}
-                  className="bg-white p-4 rounded-xl shadow-md mb-4 cursor-pointer"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
                   onClick={() => handleApplicationClick(appItem.id)}
+                  className="bg-white p-6 rounded-xl shadow-lg mb-6 cursor-pointer hover:shadow-2xl transition-all duration-300 border border-gray-100"
                 >
-                  <h2 className="text-2xl font-bold text-gray-800">{appItem.title}</h2>
-                  <p className="text-gray-600 mt-2">{appItem.description}</p>
-                  <p className="text-sm text-gray-400 mt-1">
-                    子类型：{appItem.sub_type === "case" ? "案例" : appItem.sub_type === "journal" ? "期刊" : "文书"} | 国家：{appItem.country} {appItem.tags && `| 标签：${appItem.tags}`} {appItem.categories && `| 分类：${appItem.categories}`}
+                  <h2 className="text-xl font-bold text-gray-800">{appItem.title}</h2>
+                  <p className="text-gray-600 mt-2 line-clamp-2">{appItem.description}</p>
+                  <p className="text-sm text-gray-500 mt-1">
+                    子类型：{appItem.sub_type === "case" ? "案例" : appItem.sub_type === "journal" ? "期刊" : "文书"} | 国家：{appItem.country}
                   </p>
-                </div>
+                </motion.div>
               ))}
             </div>
           )}
         </div>
 
-        {/* 右侧侧栏：最近搜索记录 */}
-        <div className="w-full md:w-1/3 space-y-6">
-          <div className="border border-gray-200 rounded-lg p-4 bg-white shadow-sm">
-            <h5 className="text-lg font-semibold text-gray-700 mb-3">最近搜索记录</h5>
+        {/* Right Sidebar */}
+        <div className="w-full md:w-1/3 mt-10 md:mt-0">
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            className="bg-white rounded-xl shadow-lg p-6 border border-gray-100"
+          >
+            <h5 className="text-lg font-semibold text-gray-800 mb-4">最近搜索记录</h5>
             {recentHistory.length === 0 ? (
               <p className="text-gray-500">暂无记录</p>
             ) : (
               recentHistory.map((item, idx) => (
-                <div key={idx} className="mb-2">
-                  <p className="font-semibold text-gray-800">{item.query}</p>
-                  <p className="text-sm text-gray-500">{new Date(item.created_at).toLocaleString()}</p>
+                <div key={idx} className="mb-4 last:mb-0">
+                  <p className="font-medium text-gray-800 hover:text-indigo-600 transition-colors cursor-pointer">{item.query}</p>
+                  <p className="text-xs text-gray-500">{new Date(item.created_at).toLocaleString()}</p>
                 </div>
               ))
             )}
-          </div>
+          </motion.div>
         </div>
       </div>
 
-      <footer className="bg-gray-100 py-4">
+      {/* Footer */}
+      <footer className="bg-gradient-to-r from-gray-100 to-gray-200 py-6 mt-auto">
         <div className="container mx-auto text-center text-gray-600 text-sm">
-          © {new Date().getFullYear()} Ryougi Law. 保留所有权利。
+          © {new Date().getFullYear()} 拉美国家法律数据库. 保留所有权利。
         </div>
       </footer>
     </div>
